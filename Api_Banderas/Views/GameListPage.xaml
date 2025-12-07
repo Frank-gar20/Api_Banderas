@@ -1,0 +1,94 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:RawGames.ViewModel"
+             xmlns:model="clr-namespace:RawGames.Model"
+             x:Class="RawGames.Views.GameListPage"
+             x:DataType="viewModel:CountryListViewModel"
+             Title="Países">
+
+    <Grid RowDefinitions="Auto,*" Padding="0">
+
+        <!--Barra de búsqueda-->
+        <SearchBar Grid.Row="0"
+                   Placeholder="Buscar país..."
+                   Text="{Binding SearchText}"
+                   Margin="10.5"/>
+
+        <!-- Lista de Países -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsBusy}"
+                     Command="{Binding RefreshCommand}">
+
+            <CollectionView ItemsSource="{Binding Countries}"
+                            SelectionMode="Single"
+                            SelectionChangedCommand="{Binding CountriesSelectedCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Country">
+                        <Frame Margin="10.5"
+                               Padding="0"
+                               CornerRadius="10"
+                               HasShadow="true"
+                               BorderColor="Transparent">
+
+                            <Grid RowDefinitions="150,auto" ColumnDefinitions="*">
+
+                                <!-- Bandera del país -->
+                                <Image Grid.Row="0"
+                                       Source="{Binding Flags.Png}"
+                                       Aspect="AspectFill" HeightRequest="150">
+                                    <Image.Clip>
+                                        <RoundRectangleGeometry CornerRadius="10,10,0,0"
+                                                                Rect="0,0,1000,150"/>
+                                    </Image.Clip>
+                                </Image>
+
+                                <!-- Nombre del país -->
+                                <Label Grid.Row="1"
+                                       Text="{Binding Name.Common}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       Margin="10,10,10,5"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2"/>
+                            </Grid>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <!-- Vista vacía -->
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" Padding="30">
+                        <Label Text="😔"
+                               FontSize="48"
+                               HorizontalTextAlignment="Center"
+                               Margin="0,0,0,10"/>
+                        <Label Text="No se encontraron países"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Gray"/>
+                        <Label Text="Intenta actualizar"
+                               FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               TextColor="LightGray"
+                               Margin="0,5,0,0"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Indicador de carga inicial -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           HeightRequest="50"
+                           WidthRequest="50"/>
+
+    </Grid>
+</ContentPage>
