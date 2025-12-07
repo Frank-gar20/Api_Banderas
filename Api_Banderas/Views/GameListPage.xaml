@@ -8,7 +8,7 @@
 
     <Grid RowDefinitions="Auto,*" Padding="0">
 
-        <!--Barra de búsqueda-->
+        <!--Barra de búsqueda--> 
         <SearchBar Grid.Row="0"
                    Placeholder="Buscar país..."
                    Text="{Binding SearchText}"
